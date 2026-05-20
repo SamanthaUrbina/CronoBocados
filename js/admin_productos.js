@@ -1,65 +1,110 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const form = document.getElementById("formProducto");
     const lista = document.getElementById("listaProductos");
     const sinProductos = document.getElementById("sinProductos");
+    const form = document.getElementById("formProducto");
     const template = document.getElementById("productoTemplate");
 
-    const productos = [];
+    // usar productos reales
+    let productosAdmin = [...productos];
 
-    function render() {
+    // render
+    function renderProductos() {
 
         lista.innerHTML = "";
 
-        if (productos.length === 0) {
+        if (productosAdmin.length === 0) {
+
             sinProductos.style.display = "block";
+
             return;
         }
 
         sinProductos.style.display = "none";
 
-        productos.forEach((p, index) => {
+        productosAdmin.forEach(producto => {
 
             const clone = template.content.cloneNode(true);
 
-            clone.querySelector(".producto-nombre").textContent = p.nombre;
-            clone.querySelector(".producto-descripcion").textContent = p.descripcion;
-            clone.querySelector(".producto-precio").textContent = "$" + p.precio;
+            clone.querySelector(".producto-nombre").textContent =
+                producto.nombre;
+
+            clone.querySelector(".producto-descripcion").textContent =
+                producto.descripcion;
+
+            clone.querySelector(".producto-precio").textContent =
+                "$" + producto.precio;
 
             // eliminar
-            clone.querySelector(".btn-eliminar").addEventListener("click", () => {
-                productos.splice(index, 1);
-                render();
-            });
+            clone.querySelector(".btn-eliminar")
+                .addEventListener("click", () => {
 
-            // editar básico
-            clone.querySelector(".btn-editar").addEventListener("click", () => {
-                alert("Esto después se conecta a backend (editar producto ID)");
-            });
+                    eliminarProducto(producto.id);
+
+                });
+
+            // editar (placeholder backend)
+            clone.querySelector(".btn-editar")
+                .addEventListener("click", () => {
+
+                    alert(
+                        "Aquí después se conectará la edición del producto ID: "
+                        + producto.id
+                    );
+
+                });
 
             lista.appendChild(clone);
 
         });
+
     }
 
+    // eliminar
+    function eliminarProducto(id) {
+
+        productosAdmin = productosAdmin.filter(
+            p => p.id !== id
+        );
+
+        renderProductos();
+
+    }
+
+    // agregar
     form.addEventListener("submit", (e) => {
 
         e.preventDefault();
 
-        const nuevo = {
+        // generar ID nuevo
+        const nuevoID = productosAdmin.length > 0
+            ? Math.max(...productosAdmin.map(p => p.id)) + 1
+            : 1;
+
+        const nuevoProducto = {
+
+            id: nuevoID,
+
             nombre: form.nombre.value,
+
             descripcion: form.descripcion.value,
-            precio: form.precio.value
+
+            precio: parseFloat(form.precio.value),
+
+            imagen: "img/default.jpg",
+
+            categoria: "Sin categoría"
+
         };
 
-        productos.push(nuevo);
+        productosAdmin.push(nuevoProducto);
 
         form.reset();
 
-        render();
+        renderProductos();
 
     });
 
-    render();
+    renderProductos();
 
 });
