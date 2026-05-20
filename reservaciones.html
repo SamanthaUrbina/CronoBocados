@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reservaciones | CronoBocados</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR (MISMO DE MENÚ) -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-semibold" href="dashboard.html">
+                CronoBocados
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu_usuario.html">Menú</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="reservaciones.html">Reservaciones</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="pedidos.html">Pedidos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="resenas.html">Reseñas</a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+                        <a class="btn btn-outline-light" href="index.html">Cerrar sesión</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- HEADER -->
+
+    <section class="menu-header">
+
+        <div class="container text-center">
+
+            <h1>Reservaciones</h1>
+
+            <p>Agenda tu mesa y vive la experiencia CronoBocados.</p>
+
+        </div>
+
+    </section>
+
+    <!-- CONTENIDO -->
+
+    <section class="menu-section">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+                <!-- FORMULARIO -->
+
+                <div class="col-lg-6">
+
+                    <div class="menu-card p-4">
+
+                        <h3>Crear reservación</h3>
+
+                        <p>Completa los datos para agendar tu mesa.</p>
+
+                        <form id="formReservacion">
+
+                            <div class="mb-3">
+
+                                <label class="form-label">Fecha</label>
+
+                                <input type="date" class="form-control" required>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">Hora</label>
+
+                                <input type="time" class="form-control" required>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">Personas</label>
+
+                                <input type="number" class="form-control" min="1" required>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">Notas</label>
+
+                                <textarea class="form-control" rows="3"
+                                    placeholder="Ej. cumpleaños, mesa especial..."></textarea>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-custom w-100">
+                                Solicitar reservación
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <!-- INFO -->
+
+                <div class="col-lg-6">
+
+                    <div class="menu-card p-4">
+
+                        <h3>Información</h3>
+
+                        <p>
+                            Las reservaciones están sujetas a disponibilidad del restaurante.
+                        </p>
+
+                        <p>
+                            Te recomendamos llegar 10 minutos antes de tu horario.
+                        </p>
+
+                        <p>
+                            Para grupos grandes, utiliza la sección de contacto.
+                        </p>
+
+                        <a href="contacto.html" class="btn btn-outline-dark mt-2">
+                            Ir a contacto
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/reservaciones.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menú | CronoBocados</title>
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-semibold" href="cliente.html">
+
+                CronoBocados
+
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto align-items-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="reservaciones.html">Reservaciones</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="pedidos.html">Pedidos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="resenas.html">Reseñas</a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+
+                        <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#carritoModal">
+
+                            Carrito
+                            <span id="contador-carrito">(0)</span>
+
+                        </button>
+
+                    </li>
+
+                    <li class="nav-item ms-2">
+
+                        <a class="btn btn-outline-light" href="index.html">
+
+                            Cerrar sesión
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- HEADER -->
+
+    <section class="menu-header">
+
+        <div class="container text-center">
+
+            <h1>Nuestro Menú</h1>
+
+            <p>Explora sabores inspirados en distintas épocas de la historia.</p>
+
+        </div>
+
+    </section>
+
+    <!-- MENÚ -->
+
+    <section class="menu-section">
+
+        <div class="container">
+
+            <!-- ANTIGÜEDAD -->
+
+            <h2 class="category-title">Antigüedad</h2>
+
+            <div class="row g-4 mb-5">
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/tuhu.webp" class="menu-img" alt="Tuh’u">
+
+                        <div class="menu-content">
+
+                            <h3>Tuh’u</h3>
+
+                            <p>Antiguo estofado de betabel y puerro inspirado en recetas mesopotámicas del año 1740 a.C.
+                            </p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$185</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Tuh’u" data-precio="185">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/panegipto.jpg" class="menu-img" alt="Pan del Nilo">
+
+                        <div class="menu-content">
+
+                            <h3>Pan del Nilo</h3>
+
+                            <p>Pan artesanal inspirado en antiguos hornos egipcios acompañado de miel natural.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$80</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Pan del Nilo"
+                                    data-precio="80">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/romano.png" class="menu-img" alt="Banquete Romano">
+
+                        <div class="menu-content">
+
+                            <h3>Banquete Romano</h3>
+
+                            <p>Carne marinada con hierbas mediterráneas acompañada de aceitunas y queso.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$245</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Banquete Romano"
+                                    data-precio="245">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- EDAD MEDIA -->
+
+            <h2 class="category-title">Edad Media</h2>
+
+            <div class="row g-4 mb-5">
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/globi.webp" class="menu-img" alt="Globi">
+
+                        <div class="menu-content">
+
+                            <h3>Globi</h3>
+
+                            <p>Bolitas de queso fritas bañadas en miel y semillas de amapola inspiradas en la antigua
+                                Roma.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$145</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Globi" data-precio="145">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/soulcakes.webp" class="menu-img" alt="Soul Cakes">
+
+                        <div class="menu-content">
+
+                            <h3>Soul Cakes</h3>
+
+                            <p>Panecillos fermentados con grosellas inspirados en recetas tradicionales del siglo XVII.
+                            </p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$135</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Soul Cakes"
+                                    data-precio="135">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/medieval.jpg" class="menu-img" alt="Festín Medieval">
+
+                        <div class="menu-content">
+
+                            <h3>Festín Medieval</h3>
+
+                            <p>Pollo rostizado acompañado de papas especiadas y salsa cremosa artesanal.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$360</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Festín Medieval"
+                                    data-precio="360">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RENACIMIENTO -->
+
+            <h2 class="category-title">Renacimiento</h2>
+
+            <div class="row g-4 mb-5">
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/pumpkin.jpg" class="menu-img" alt="Pumpkin Tourte">
+
+                        <div class="menu-content">
+
+                            <h3>Pumpkin Tourte</h3>
+
+                            <p>Cheesecake de calabaza inspirado en una receta de 1570 con canela y azúcar.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$155</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Pumpkin Tourte"
+                                    data-precio="155">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/pasta.jpg" class="menu-img" alt="Pasta Florentina">
+
+                        <div class="menu-content">
+
+                            <h3>Pasta Florentina</h3>
+
+                            <p>Pasta cremosa preparada con queso parmesano, champiñones y especias italianas clásicas.
+                            </p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$220</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Pasta Florentina"
+                                    data-precio="220">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/tarta.jpg" class="menu-img" alt="Tarta Imperial">
+
+                        <div class="menu-content">
+
+                            <h3>Tarta Imperial</h3>
+
+                            <p>Tarta dulce elaborada con frutas y crema inspirada en banquetes europeos.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$170</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Tarta Imperial"
+                                    data-precio="170">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FUTURO -->
+
+            <h2 class="category-title">Futuro</h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/burger.jpg" class="menu-img" alt="Hamburguesa 3000">
+
+                        <div class="menu-content">
+
+                            <h3>Hamburguesa 3000</h3>
+
+                            <p>Hamburguesa futurista con pan negro artesanal y salsa especial de la casa.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$295</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Hamburguesa 3000"
+                                    data-precio="295">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/galaxia.webp" class="menu-img" alt="Galaxia Roll">
+
+                        <div class="menu-content">
+
+                            <h3>Galaxia Roll</h3>
+
+                            <p>Rollos de sushi con salmón, aguacate y queso crema con estética futurista.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$275</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Galaxia Roll"
+                                    data-precio="275">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="menu-card">
+
+                        <img src="img/orbita.jpg" class="menu-img" alt="Órbita Dulce">
+
+                        <div class="menu-content">
+
+                            <h3>Órbita Dulce</h3>
+
+                            <p>Mousse de chocolate y frutos rojos con decoración galáctica.</p>
+
+                            <div class="menu-footer">
+
+                                <span class="price">$165</span>
+
+                                <button class="btn btn-custom agregar-carrito" data-nombre="Órbita Dulce"
+                                    data-precio="165">
+                                    Agregar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- MODAL CARRITO -->
+
+    <div class="modal fade" id="carritoModal">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5>Tu Pedido</h5>
+
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <ul id="lista-carrito" class="list-group mb-3"></ul>
+
+                    <h5 class="text-end">
+                        Total: $<span id="total">0</span>
+                    </h5>
+
+                </div>
+
+                <div class="modal-footer d-flex justify-content-between flex-wrap gap-2">
+
+                    <button class="btn btn-danger" id="vaciarCarrito">
+                        Vaciar carrito
+                    </button>
+
+                    <div class="d-flex gap-2">
+
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button class="btn btn-custom" id="confirmarPedido">
+                            Confirmar pedido
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <div class="container text-center">
+
+            <p>© 2026 CronoBocados</p>
+
+        </div>
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/carrito.js"></script>
+
+</body>
+
+</html>
