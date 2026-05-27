@@ -1,110 +1,90 @@
-document.addEventListener("DOMContentLoaded", () => {
-
+document.addEventListener("DOMContentLoaded", async () => {
     const lista = document.getElementById("listaProductos");
     const sinProductos = document.getElementById("sinProductos");
     const form = document.getElementById("formProducto");
     const template = document.getElementById("productoTemplate");
 
-    // usar productos reales
-    let productosAdmin = [...productos];
+    async function cargarProductos() {
+        try {
+            const res = await fetch("http://localhost:4000/api/productos");
+            const data = await res.json();
+            
+            lista.innerHTML = "";
+            if (!data.ok || data.data.length === 0) {
+                sinProductos.style.display = "block";
+                return;
+            }
+            sinProductos.style.display = "none";
 
-    // render
-    function renderProductos() {
+            data.data.forEach(producto => {
+                const clone = template.content.cloneNode(true);
+                clone.querySelector(".producto-nombre").textContent = producto.nombre;
+                clone.querySelector(".producto-descripcion").textContent = producto.descripcion;
+                clone.querySelector(".producto-precio").textContent = "$" + producto.precio;
 
-        lista.innerHTML = "";
+                // eliminar
+                clone.querySelector(".btn-eliminar").addEventListener("click", async () => {
+                    if(!confirm("¿Seguro que quieres eliminar este producto?")) return;
+                    
+                    const token = localStorage.getItem("token");
+                    try {
+                        const delRes = await fetch(`http://localhost:4000/api/productos/${producto.id_producto}`, {
+                            method: "DELETE",
+                            headers: { "Authorization": `Bearer ${token}` }
+                        });
+                        const delData = await delRes.json();
+                        if(delData.ok) {
+                            cargarProductos();
+                        } else {
+                            alert(delData.mensaje);
+                        }
+                    } catch(err) {
+                        alert("Error al eliminar");
+                    }
+                });
 
-        if (productosAdmin.length === 0) {
+                // editar (placeholder)
+                clone.querySelector(".btn-editar").addEventListener("click", () => {
+                    alert("Para editar productos, se debe abrir un modal de edición en futuras versiones. (ID: " + producto.id_producto + ")");
+                });
 
-            sinProductos.style.display = "block";
-
-            return;
+                lista.appendChild(clone);
+            });
+        } catch(err) {
+            console.error(err);
         }
-
-        sinProductos.style.display = "none";
-
-        productosAdmin.forEach(producto => {
-
-            const clone = template.content.cloneNode(true);
-
-            clone.querySelector(".producto-nombre").textContent =
-                producto.nombre;
-
-            clone.querySelector(".producto-descripcion").textContent =
-                producto.descripcion;
-
-            clone.querySelector(".producto-precio").textContent =
-                "$" + producto.precio;
-
-            // eliminar
-            clone.querySelector(".btn-eliminar")
-                .addEventListener("click", () => {
-
-                    eliminarProducto(producto.id);
-
-                });
-
-            // editar (placeholder backend)
-            clone.querySelector(".btn-editar")
-                .addEventListener("click", () => {
-
-                    alert(
-                        "Aquí después se conectará la edición del producto ID: "
-                        + producto.id
-                    );
-
-                });
-
-            lista.appendChild(clone);
-
-        });
-
-    }
-
-    // eliminar
-    function eliminarProducto(id) {
-
-        productosAdmin = productosAdmin.filter(
-            p => p.id !== id
-        );
-
-        renderProductos();
-
     }
 
     // agregar
-    form.addEventListener("submit", (e) => {
-
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("token");
+        if (!token) return alert("No estás autorizado");
 
-        // generar ID nuevo
-        const nuevoID = productosAdmin.length > 0
-            ? Math.max(...productosAdmin.map(p => p.id)) + 1
-            : 1;
+        const nombre = form.nombre.value;
+        const descripcion = form.descripcion.value;
+        const precio = parseFloat(form.precio.value);
 
-        const nuevoProducto = {
-
-            id: nuevoID,
-
-            nombre: form.nombre.value,
-
-            descripcion: form.descripcion.value,
-
-            precio: parseFloat(form.precio.value),
-
-            imagen: "img/default.jpg",
-
-            categoria: "Sin categoría"
-
-        };
-
-        productosAdmin.push(nuevoProducto);
-
-        form.reset();
-
-        renderProductos();
-
+        try {
+            const res = await fetch("http://localhost:4000/api/productos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ nombre, descripcion, precio, epoca: "Nueva" })
+            });
+            const data = await res.json();
+            if(data.ok) {
+                form.reset();
+                cargarProductos();
+            } else {
+                alert(data.mensaje);
+            }
+        } catch(err) {
+            alert("Error al crear producto");
+        }
     });
 
-    renderProductos();
-
+    cargarProductos();
 });

@@ -1,93 +1,83 @@
-document.addEventListener("DOMContentLoaded", () => {
-
+document.addEventListener("DOMContentLoaded", async () => {
     const form = document.getElementById("formResena");
     const listaResenas = document.getElementById("listaResenas");
     const sinResenas = document.getElementById("sinResenas");
     const template = document.getElementById("resenaTemplate");
 
-    const resenas = [];
-
-    // control de reseñas por día
-    let contadorDia = 0;
-    let ultimaFecha = new Date().toDateString();
-
-    function resetContadorSiEsNuevoDia() {
-
-        const hoy = new Date().toDateString();
-
-        if (hoy !== ultimaFecha) {
-            contadorDia = 0;
-            ultimaFecha = hoy;
-        }
-    }
-
     function contarPalabras(texto) {
         return texto.trim().split(/\s+/).filter(Boolean).length;
     }
 
-    function renderResenas(data) {
+    async function cargarResenas() {
+        try {
+            const res = await fetch("http://localhost:4000/api/resenas");
+            const data = await res.json();
+            
+            listaResenas.innerHTML = "";
+            
+            if (!data.ok || data.data.length === 0) {
+                sinResenas.style.display = "block";
+                return;
+            }
 
-        listaResenas.innerHTML = "";
+            sinResenas.style.display = "none";
 
-        if (!data || data.length === 0) {
+            data.data.forEach(r => {
+                const clone = template.content.cloneNode(true);
+                clone.querySelector(".resena-rating").textContent = "⭐".repeat(r.calificacion);
+                // Si la BD devuelve el nombre del autor, lo mostramos (o lo concatenamos)
+                clone.querySelector(".resena-comentario").innerHTML = `<strong>${r.autor}:</strong> ${r.comentario}`;
+                listaResenas.appendChild(clone);
+            });
+        } catch (err) {
+            console.error("Error cargando reseñas:", err);
             sinResenas.style.display = "block";
-            return;
+            sinResenas.textContent = "No se pudieron cargar las reseñas.";
         }
-
-        sinResenas.style.display = "none";
-
-        data.forEach(r => {
-
-            const clone = template.content.cloneNode(true);
-
-            clone.querySelector(".resena-rating").textContent =
-                "⭐".repeat(r.rating);
-
-            clone.querySelector(".resena-comentario").textContent =
-                r.comentario;
-
-            listaResenas.appendChild(clone);
-
-        });
     }
 
-    form.addEventListener("submit", (e) => {
-
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        resetContadorSiEsNuevoDia();
-
-        const rating = form.rating.value;
-        const comentario = form.comentario.value;
-
-        // VALIDACIÓN 1: máximo 3 reseñas por día
-        if (contadorDia >= 3) {
-            alert("Solo puedes dejar 3 reseñas por día.");
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Debes iniciar sesión para dejar una reseña.");
+            window.location.href = "login.html";
             return;
         }
 
-        // VALIDACIÓN 2: máximo 70 palabras
-        const palabras = contarPalabras(comentario);
+        const calificacion = form.rating.value;
+        const comentario = form.comentario.value;
 
-        if (palabras > 70) {
+        // VALIDACIÓN: máximo 70 palabras
+        if (contarPalabras(comentario) > 70) {
             alert("Tu reseña no puede superar las 70 palabras.");
             return;
         }
 
-        // si todo OK
-        resenas.push({
-            rating,
-            comentario
-        });
+        try {
+            const res = await fetch("http://localhost:4000/api/resenas", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ calificacion, comentario })
+            });
 
-        contadorDia++;
-
-        form.reset();
-
-        renderResenas(resenas);
-
+            const data = await res.json();
+            if (data.ok) {
+                form.reset();
+                cargarResenas(); // Recargar la lista
+            } else {
+                alert(data.mensaje); // Mostrará "Solo 3 reseñas por día" si llega al límite
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Hubo un error al enviar tu reseña.");
+        }
     });
 
-    renderResenas(resenas);
-
+    // Cargar al inicio
+    cargarResenas();
 });

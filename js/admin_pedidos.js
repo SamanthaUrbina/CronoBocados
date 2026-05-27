@@ -1,60 +1,85 @@
-document.addEventListener("DOMContentLoaded", () => {
-
+document.addEventListener("DOMContentLoaded", async () => {
     const lista = document.getElementById("listaPedidosAdmin");
     const sinPedidos = document.getElementById("sinPedidosAdmin");
     const template = document.getElementById("pedidoAdminTemplate");
 
-    const pedidos = [];
+    async function cargarPedidos() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
 
-    function render() {
-
-        lista.innerHTML = "";
-
-        if (pedidos.length === 0) {
-            sinPedidos.style.display = "block";
-            return;
-        }
-
-        sinPedidos.style.display = "none";
-
-        pedidos.forEach(p => {
-
-            const clone = template.content.cloneNode(true);
-
-            clone.querySelector(".pedido-id").textContent = p.id;
-            clone.querySelector(".pedido-fecha").textContent = p.fecha;
-            clone.querySelector(".pedido-total").textContent = p.total;
-
-            // estado editable
-            const estadoSelect = clone.querySelector(".pedido-estado");
-            estadoSelect.value = p.estado;
-
-            estadoSelect.addEventListener("change", (e) => {
-                p.estado = e.target.value;
+        try {
+            const res = await fetch("http://localhost:4000/api/pedidos", {
+                headers: { "Authorization": `Bearer ${token}` }
             });
+            const data = await res.json();
+            
+            lista.innerHTML = "";
+            if (!data.ok || data.data.length === 0) {
+                sinPedidos.style.display = "block";
+                return;
+            }
+            sinPedidos.style.display = "none";
 
-            // productos
-            const ul = clone.querySelector(".pedido-productos");
+            for(const p of data.data) {
+                const clone = template.content.cloneNode(true);
+                clone.querySelector(".pedido-id").textContent = p.id_pedido;
+                clone.querySelector(".pedido-fecha").textContent = new Date(p.fecha).toLocaleString();
+                clone.querySelector(".pedido-total").textContent = "$" + p.total;
 
-            if (p.productos && p.productos.length > 0) {
+                // estado editable
+                const estadoSelect = clone.querySelector(".pedido-estado");
+                // Los estados permitidos en bd son: pendiente, en preparación, listo, entregado, cancelado
+                estadoSelect.value = p.estado;
 
-                p.productos.forEach(prod => {
-                    const li = document.createElement("li");
-                    li.textContent = prod;
-                    ul.appendChild(li);
+                estadoSelect.addEventListener("change", async (e) => {
+                    const nuevoEstado = e.target.value;
+                    try {
+                        const updateRes = await fetch(`http://localhost:4000/api/pedidos/${p.id_pedido}/estado`, {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ estado: nuevoEstado })
+                        });
+                        const updateData = await updateRes.json();
+                        if(!updateData.ok) {
+                            alert("Error: " + updateData.mensaje);
+                            estadoSelect.value = p.estado; // revertir
+                        } else {
+                            p.estado = nuevoEstado;
+                        }
+                    } catch(err) {
+                        alert("Error al actualizar estado");
+                        estadoSelect.value = p.estado; // revertir
+                    }
                 });
 
-            } else {
-                const li = document.createElement("li");
-                li.textContent = "Sin productos";
-                ul.appendChild(li);
+                // Cargar productos del pedido
+                const resDetalle = await fetch(`http://localhost:4000/api/pedidos/${p.id_pedido}`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const dataDetalle = await resDetalle.json();
+                
+                const ul = clone.querySelector(".pedido-productos");
+                if (dataDetalle.ok && dataDetalle.data.productos && dataDetalle.data.productos.length > 0) {
+                    dataDetalle.data.productos.forEach(prod => {
+                        const li = document.createElement("li");
+                        li.textContent = `${prod.cantidad}x ${prod.nombre}`;
+                        ul.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement("li");
+                    li.textContent = "Sin productos";
+                    ul.appendChild(li);
+                }
+
+                lista.appendChild(clone);
             }
-
-            lista.appendChild(clone);
-
-        });
+        } catch(err) {
+            console.error("Error al cargar pedidos:", err);
+        }
     }
 
-    render();
-
+    cargarPedidos();
 });

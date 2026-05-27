@@ -1,66 +1,63 @@
-let reservaciones = [];
-
-const LIMITE_RESERVACIONES = 20;
-
 const form = document.getElementById("formReservacion");
 
-form.addEventListener("submit", function (e) {
+if(form) {
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    e.preventDefault();
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Debes iniciar sesión para hacer una reservación.");
+            window.location.href = "login.html";
+            return;
+        }
 
-    const fecha = form.querySelector('input[type="date"]').value;
-    const hora = form.querySelector('input[type="time"]').value;
-    const personas = parseInt(form.querySelector('input[type="number"]').value);
-    const notas = form.querySelector("textarea").value;
+        const fecha = form.querySelector('input[type="date"]').value;
+        const hora = form.querySelector('input[type="time"]').value;
+        const personas = parseInt(form.querySelector('input[type="number"]').value);
 
-    // VALIDAR LIMITE TOTAL
-    if (reservaciones.length >= LIMITE_RESERVACIONES) {
-        alert("Has alcanzado el máximo de 20 reservaciones.");
-        return;
-    }
+        // VALIDAR FECHA PASADA
+        const hoy = new Date();
+        hoy.setHours(0,0,0,0);
+        const fechaSeleccionada = new Date(fecha);
+        if (fechaSeleccionada < hoy) {
+            alert("No puedes hacer reservaciones en fechas pasadas.");
+            return;
+        }
 
-    // VALIDAR FECHA PASADA
-    const hoy = new Date();
-    hoy.setHours(0,0,0,0);
+        // VALIDAR PERSONAS
+        if (personas > 10 || personas < 1) {
+            alert("El número de personas debe ser entre 1 y 10.");
+            return;
+        }
 
-    const fechaSeleccionada = new Date(fecha);
+        // VALIDAR HORARIO
+        const horaNum = parseInt(hora.split(":")[0]);
+        if (horaNum < 8 || horaNum > 23) {
+            alert("El horario disponible es de 8:00 AM a 11:00 PM.");
+            return;
+        }
 
-    if (fechaSeleccionada < hoy) {
-        alert("No puedes hacer reservaciones en fechas pasadas.");
-        return;
-    }
+        try {
+            const res = await fetch("http://localhost:4000/api/reservaciones", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ fecha, hora, personas })
+            });
 
-    // VALIDAR PERSONAS
-    if (personas > 10) {
-        alert("El máximo permitido es de 10 personas por reservación.");
-        return;
-    }
-
-    // VALIDAR HORARIO
-    const horaNum = parseInt(hora.split(":")[0]);
-
-    if (horaNum < 8 || horaNum > 23) {
-        alert("El horario disponible es de 8:00 AM a 11:00 PM.");
-        return;
-    }
-
-    // VALIDAR NOTAS (100 palabras)
-    const palabras = notas.trim().split(/\s+/).filter(Boolean);
-
-    if (palabras.length > 100) {
-        alert("Las notas no pueden exceder 100 palabras.");
-        return;
-    }
-
-    // SI TODO OK
-    reservaciones.push({
-        fecha,
-        hora,
-        personas,
-        notas
+            const data = await res.json();
+            
+            if (data.ok) {
+                alert("¡Reservación guardada con éxito en la base de datos!");
+                form.reset();
+            } else {
+                alert("Error al reservar: " + data.mensaje);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Hubo un error de conexión con el servidor.");
+        }
     });
-
-    alert("Reservación enviada correctamente.");
-
-    form.reset();
-});
+}
